@@ -3,19 +3,18 @@ using UnityEngine.InputSystem;
 
 public class turret : MonoBehaviour
 {
-    public Camera cam;
-
     private Vector3 _mousePos;
     private Transform _transform;
-
+    private Camera _cam;
     private void Start()
     {
         _transform = GetComponent<Transform>();
+        _cam = GameObject.Find("Main Camera").GetComponent<Camera>();
     }
 
     private void Update()
     {
-        _mousePos = cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        _mousePos = _cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
     }
 
     private void FixedUpdate()

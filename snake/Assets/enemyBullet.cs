@@ -1,27 +1,32 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
 
-public class bulletscript : MonoBehaviour
+public class enemyBullet : MonoBehaviour
 {
     public GameObject hitEffect;
     public AnimationCurve curve;
     public AnimationCurve sizeCurve;
-    private Camera _cam;
-    private bool _coolDown;
-
 
     private Vector3 _start;
 
-    private Vector3 _target;
     private float _time;
+    private Vector3 _target;
+    private Transform _player;
+    private Transform[] _playerBody;
+    private Boolean _coolDown;
 
-    private void Awake()
+    private void Start()
     {
         _start = transform.position;
-        _cam = GameObject.Find("Main Camera").GetComponent<Camera>();
-        _target = _cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+        //_player = GameObject.Find("snake").transform.GetChild(0).gameObject.transform;
+        _player = GameObject.Find("snake").transform;
+        _playerBody = _player.GetComponentsInChildren<Transform>();
+
+
+        _target = _player.transform.GetChild(Random.Range(0, _playerBody.Length-2)).position;
         StartCoroutine(Curve());
     }
 
@@ -39,14 +44,14 @@ public class bulletscript : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    
+
     private IEnumerator Cooldown()
     {
         _coolDown = true;
         yield return new WaitForSeconds(1f);
         _coolDown = false;
     }
-
+    
     private IEnumerator Curve()
     {
         var duration = 2f;
